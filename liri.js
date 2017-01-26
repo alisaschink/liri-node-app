@@ -27,13 +27,14 @@ if (command == "my-tweets"){
     }
   });
 
+  //spotify
 } else if (command == "spotify-this-song"){
   var spotify = require('spotify');
-  
-  if (process.argv[3] != "undefined"){
-      var song = process.argv[3];
+  //if song name isnt specified...
+  if (!process.argv[3]){
+      var song = "the sign ace of base"
     } else {
-      var song = "the sign"
+      var song = process.argv[3];
     }
  
   spotify.search({ type: 'track', query: song }, function(err, data) {
@@ -54,15 +55,53 @@ if (command == "my-tweets"){
 });
 
 } else if (command == "movie-this"){
-  // title of movie
-  // year it came out
-  // country produced
-  // language
-  // plot
-  // actors
-  // rotten tomatoes rating
-  // rotten tomatoes URL
-  // default mr nobody
+  var movieName = "";
+
+  //grabs movie name and stores it as a variable
+  //if movie name isnt specified...
+  if (!process.argv[3]){
+     // default mr nobody
+    movieName = "mr+nobody"
+  } else {
+    for (var i=3; i<process.argv.length; i++){
+      if(i == 3) movieName = movieName + process.argv[i];
+      else movieName = movieName + "+" + process.argv[i];
+    }
+  }
+ 
+  // Then run a request to the OMDB API with the movie specified
+  var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&r=json&tomatoes=true";
+  var request = require("request");
+
+  //request using query url
+  request(queryUrl, function(error, response, body) {
+
+    // If the request was successful...
+    if (!error && response.statusCode === 200) {
+      // title of movie
+      console.log("Title: " + JSON.parse(body).Title);
+      // year it came out
+      console.log("Released: " + JSON.parse(body).Released);
+      // country produced
+      console.log("Country: " + JSON.parse(body).Country);
+      // language
+      console.log("Language: " + JSON.parse(body).Language);
+      // plot
+      console.log("Plot: " + JSON.parse(body).Plot);
+      // actors
+      console.log("Actors: " + JSON.parse(body).Actors);
+      // imdb tomatoes rating
+      console.log("IMDB Rating: " + JSON.parse(body).imdbRating);
+      // rotten tomatoes rating
+      console.log("Rotten Tomatoes Rating: " + JSON.parse(body).tomatoRating);
+      // rotten tomatoes URL
+      console.log("Rotten Tomatoes URL: " + JSON.parse(body).tomatoURL);
+      } 
+  });
+  
+  
+  
+  
 } else if (command == "do-what-it-says"){
   // use random.txt to take in command
 } else {
