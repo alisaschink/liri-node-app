@@ -2,13 +2,13 @@ var keys = require('./keys.js');
 
 var keysData = [];
 var command = process.argv[2];
+var input = process.argv[3];
 
 for (key in keys.twitterKeys){
   keysData.push(keys.twitterKeys[key]);
 }
 
-//switch statement or if/else for commands
-if (command == "my-tweets"){
+function getTweets(){
   // show last 20 tweets and when they were created
   var Twitter = require('twitter'); 
   var userName = 'alisa_schink';
@@ -27,14 +27,15 @@ if (command == "my-tweets"){
     }
   });
 
-  //spotify
-} else if (command == "spotify-this-song"){
+}
+
+function getSong() {
   var spotify = require('spotify');
   //if song name isnt specified...
-  if (!process.argv[3]){
+  if (!input){
       var song = "the sign ace of base"
     } else {
-      var song = process.argv[3];
+      var song = input;
     }
  
   spotify.search({ type: 'track', query: song }, function(err, data) {
@@ -52,14 +53,15 @@ if (command == "my-tweets"){
     // album
     console.log("Album: " + JSON.stringify(data.tracks.items[1].album.name, null, 2));
     //default song the sign ace of base
-});
+  });
+}
 
-} else if (command == "movie-this"){
+function getMovie() {
   var movieName = "";
 
   //grabs movie name and stores it as a variable
   //if movie name isnt specified...
-  if (!process.argv[3]){
+  if (!input){
      // default mr nobody
     movieName = "mr+nobody"
   } else {
@@ -98,12 +100,34 @@ if (command == "my-tweets"){
       console.log("Rotten Tomatoes URL: " + JSON.parse(body).tomatoURL);
       } 
   });
-  
-  
-  
-  
-} else if (command == "do-what-it-says"){
-  // use random.txt to take in command
-} else {
-  console.log("that is not a valid command");
 }
+
+function runCommand(){
+  var fs = require('fs');
+  // use random.txt to take in command
+  fs.readFile('random.txt', 'utf8', function(err, data) {
+     var textArr = data.split(',');
+     console.log(textArr); 
+     command = textArr[0];
+     input = textArr[1];
+     liri();
+  });
+}
+
+
+function liri(){
+  // if/else for commands
+  if (command == "my-tweets"){
+    getTweets();
+  } else if (command == "spotify-this-song"){
+    getSong();
+  } else if (command == "movie-this"){
+    getMovie(); 
+  } else if (command == "do-what-it-says"){
+    runCommand();
+  } else {
+    console.log("that is not a valid command");
+  }
+}
+
+liri();
