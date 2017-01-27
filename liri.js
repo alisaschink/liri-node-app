@@ -4,6 +4,7 @@ var keysData = [];
 var command = process.argv[2];
 var input = process.argv[3];
 
+//push twitter keys to array
 for (key in keys.twitterKeys){
   keysData.push(keys.twitterKeys[key]);
 }
@@ -20,10 +21,15 @@ function getTweets(){
     access_token_secret: keysData[3]
   });
 
-  var params = {screen_name: userName};
+  var params = {screen_name: userName, count: 20};
   client.get('statuses/user_timeline', params, function(error, tweets, response) {
-    if (!error) {
-      console.log(tweets);
+    if (error) {
+      console.log(error);
+    } else {
+      //log tweets and when they were created
+      for (i=0; i<tweets.length; i++){
+      console.log(tweets[i].text + " " + tweets[i].created_at);
+      }
     }
   });
 
@@ -52,15 +58,14 @@ function getSong() {
     console.log("Preview: " + JSON.stringify(data.tracks.items[1].preview_url, null, 2));
     // album
     console.log("Album: " + JSON.stringify(data.tracks.items[1].album.name, null, 2));
-    //default song the sign ace of base
+    // default song the sign ace of base
   });
 }
 
 function getMovie() {
   var movieName = "";
-
-  //grabs movie name and stores it as a variable
-  //if movie name isnt specified...
+  // grabs movie name and stores it as a variable
+  // if movie name isnt specified...
   if (!input){
      // default mr nobody
     movieName = "mr+nobody"
@@ -71,11 +76,11 @@ function getMovie() {
     }
   }
  
-  // Then run a request to the OMDB API with the movie specified
+  // run a request to the OMDB API with the movie specified
   var queryUrl = "http://www.omdbapi.com/?t=" + movieName + "&y=&plot=short&r=json&tomatoes=true";
   var request = require("request");
 
-  //request using query url
+  // request using query url
   request(queryUrl, function(error, response, body) {
 
     // If the request was successful...
