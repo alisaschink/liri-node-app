@@ -49,16 +49,31 @@ function getSong() {
         console.log('Error occurred: ' + err);
         return;
     }
-    
-    // show artist(s)
-    console.log("Artist: " +JSON.stringify(data.tracks.items[1].album.artists[0].name, null, 2));
-    // song's name
-    console.log("Song Name: " + JSON.stringify(data.tracks.items[1].name, null, 2));
-    // preview link
-    console.log("Preview: " + JSON.stringify(data.tracks.items[1].preview_url, null, 2));
-    // album
-    console.log("Album: " + JSON.stringify(data.tracks.items[1].album.name, null, 2));
-    // default song the sign ace of base
+
+    if(!input){
+      // default song the sign ace of base
+      // show artist(s)
+      console.log("Artist: " +JSON.stringify(data.tracks.items[1].album.artists[0].name, null, 2));
+      // song's name
+      console.log("Song Name: " + JSON.stringify(data.tracks.items[1].name, null, 2));
+      // preview link
+      console.log("Preview: " + JSON.stringify(data.tracks.items[1].preview_url, null, 2));
+      // album
+      console.log("Album: " + JSON.stringify(data.tracks.items[1].album.name, null, 2));
+    } else {
+      //logs first 5 hits within spotify
+      for(i=0; i<5; i++){
+        // show artist(s)
+        console.log("Artist: " +JSON.stringify(data.tracks.items[i].album.artists[0].name, null, 2));
+        // song's name
+        console.log("Song Name: " + JSON.stringify(data.tracks.items[i].name, null, 2));
+        // preview link
+        console.log("Preview: " + JSON.stringify(data.tracks.items[i].preview_url, null, 2));
+        // album
+        console.log("Album: " + JSON.stringify(data.tracks.items[i].album.name, null, 2));
+        console.log("----------------------------------------------------------------------------");
+      };   
+    }
   });
 }
 
